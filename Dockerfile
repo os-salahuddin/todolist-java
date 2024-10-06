@@ -8,13 +8,8 @@ WORKDIR /app
 COPY pom.xml .
 COPY src ./src
 
+# Build the application using Maven, skipping tests
 RUN mvn clean package -DskipTests
-
-# Copy the source code to the container
-COPY . .
-
-# Build the application using Maven
-RUN mvn clean install -X
 
 # ---- Second stage: run the application ----
 FROM openjdk:17-jdk-alpine
@@ -29,6 +24,4 @@ COPY --from=build /app/target/todo-0.0.1-SNAPSHOT.jar todo-app.jar
 EXPOSE 8080
 
 # Command to run the JAR file
-ENTRYPOINT ["java", "-jar", "/app/todo-app.jar"]
-
-CMD ["mvn", "spring-boot:run"]
+ENTRYPOINT ["java", "-jar", "todo-app.jar"]
